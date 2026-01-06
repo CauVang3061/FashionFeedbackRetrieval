@@ -217,7 +217,7 @@ class ImageRetrievalGUI:
         # Feedback button
         tk.Button(
             info_frame,
-            text="Refine",
+            text="OK",
             command=self.apply_feedback,
             bg='#27ae60',
             fg='white',
@@ -447,6 +447,15 @@ class ImageRetrievalGUI:
         
     def update_stats(self):
         """Update system statistics"""
+        self.stats_text.delete('1.0', tk.END)
+        
+        stats_text = f"Dataset Size: {len(self.system.images)}\n"
+        stats_text += f"Feature Dim: {self.system.features.shape[1]}\n"
+        stats_text += f"Model: ResNet50\n"
+        stats_text += f"Metric: Cosine Similarity\n"
+        stats_text += f"Feedback: Rocchio Algorithm\n"
+        stats_text += f"α={self.system.rocchio.alpha}, β={self.system.rocchio.beta}, γ={self.system.rocchio.gamma}\n\n"
+        
         session_stats = self.system.get_session_stats()
         if session_stats:
             stats_text += f"Session Info:\n"
