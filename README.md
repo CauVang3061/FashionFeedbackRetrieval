@@ -92,10 +92,19 @@ On first run, the system will:
 
 ### Rocchio Algorithm
 
-Classic relevance feedback formula:
+Classic Rocchio relevance feedback formula:
 
 ```
-Q_new = α × Q_original + β × (1/|Dr|) × Σ(relevant) - γ × (1/|Dn|) × Σ(irrelevant)
+\[
+\mathbf{q}_{\text{new}} =
+\alpha \mathbf{q}_{0}
++
+\frac{\beta}{|\mathcal{D}_r|}
+\sum_{\mathbf{d}_i \in \mathcal{D}_r} \mathbf{d}_i
+-
+\frac{\gamma}{|\mathcal{D}_n|}
+\sum_{\mathbf{d}_j \in \mathcal{D}_n} \mathbf{d}_j
+\]
 ```
 
 Default popular parameters:
