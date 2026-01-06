@@ -94,24 +94,23 @@ On first run, the system will:
 
 Classic Rocchio relevance feedback formula:
 
-```
-\[
-\mathbf{q}_{\text{new}} =
-\alpha \mathbf{q}_{0}
-+
-\frac{\beta}{|\mathcal{D}_r|}
-\sum_{\mathbf{d}_i \in \mathcal{D}_r} \mathbf{d}_i
--
-\frac{\gamma}{|\mathcal{D}_n|}
-\sum_{\mathbf{d}_j \in \mathcal{D}_n} \mathbf{d}_j
-\]
-```
+$$
+\mathbf{q}_{new} = \alpha \mathbf{q}_{0} + \frac{\beta}{|\mathcal{D}_r|} \sum_{\mathbf{d}_i \in \mathcal{D}_r} \mathbf{d}_i - \frac{\gamma}{|\mathcal{D}_n|} \sum_{\mathbf{d}_j \in \mathcal{D}_n} \mathbf{d}_j
+$$
+
+**Where:**
+
+- $\mathbf{q}_{new}$: The modified query vector.
+- $\mathbf{q}_{0}$: The original query vector.
+- $\mathcal{D}_r$: Set of relevant documents.
+- $\mathcal{D}_n$: Set of non-relevant documents.
+- $\alpha, \beta, \gamma$: Weights for each component.
 
 Default popular parameters:
 
-- α = 1.0 (original query weight)
-- β = 0.75 (relevant documents weight)
-- γ = 0.25 (irrelevant documents weight)
+- $\alpha$ = 1.0 (original query weight)
+- $\beta$ = 0.75 (relevant documents weight)
+- $\gamma$ = 0.25 (irrelevant documents weight)
 
 ## 📊 Dataset Information
 
