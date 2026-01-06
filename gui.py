@@ -217,7 +217,7 @@ class ImageRetrievalGUI:
         # Feedback button
         tk.Button(
             info_frame,
-            text="🔄 Refine Search (Apply Feedback)",
+            text="🔄",
             command=self.apply_feedback,
             bg='#27ae60',
             fg='white',
@@ -451,10 +451,10 @@ class ImageRetrievalGUI:
         
         stats_text = f"Dataset Size: {len(self.system.images)}\n"
         stats_text += f"Feature Dim: {self.system.features.shape[1]}\n"
-        stats_text += f"Model: ResNet50\n"
-        stats_text += f"Metric: Cosine Similarity\n"
-        stats_text += f"Feedback: Rocchio Algorithm\n"
-        stats_text += f"α=1.0, β=0.75, γ=0.25\n\n"
+        stats_text += f"Model: {self.system.feature_extractor.model_name}\n"
+        stats_text += f"Metric: {self.system.similarity_calculator.metric}\n"
+        stats_text += f"Feedback: {self.system.rocchio}\n"
+        stats_text += f"α={self.system.rocchio.alpha}, β={self.system.rocchio.beta}, γ={self.system.rocchio.gamma}\n\n"
         
         session_stats = self.system.get_session_stats()
         if session_stats:

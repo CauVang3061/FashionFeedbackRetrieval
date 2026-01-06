@@ -32,11 +32,6 @@ def main():
     app = ImageRetrievalGUI(root, system)
     
     print("Application launched successfully!")
-    print("\nHow to use:")
-    print("  1. Text Search: Enter keywords like 'dress', 'shoes', 'trouser'")
-    print("  2. Upload Image: Select any color/grayscale image (auto-resized)")
-    print("  3. Mark relevant (✓) / irrelevant (✗) images")
-    print("  4. Click 'Refine Search' to apply feedback")
     
     root.mainloop()
 

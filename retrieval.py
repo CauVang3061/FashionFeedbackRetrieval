@@ -22,7 +22,7 @@ class ImageRetrievalSystem:
         self.dataset_limit = dataset_limit
         self.dataset = FashionMNISTDataset(subset_size=dataset_limit)
         self.feature_extractor = FeatureExtractor()
-        self.similarity_calculator = SimilarityCalculator(metric='cosine')
+        self.similarity_calculator = SimilarityCalculator()
         self.rocchio = RocchioFeedback(alpha=1.0, beta=0.75, gamma=0.25)
         self.text_matcher = None
         
@@ -60,7 +60,7 @@ class ImageRetrievalSystem:
             print(f"Loaded features shape: {self.features.shape}")
         else:
             print("\nExtracting features (this may take a few minutes)...")
-            preprocessed = self.dataset.preprocess_for_cnn()
+            preprocessed = self.dataset.preprocess_cnn()
             self.features = self.feature_extractor.extract_features(preprocessed)
             
             # Cache features for future use
