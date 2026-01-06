@@ -217,7 +217,7 @@ class ImageRetrievalGUI:
         # Feedback button
         tk.Button(
             info_frame,
-            text="🔄",
+            text="Refine",
             command=self.apply_feedback,
             bg='#27ae60',
             fg='white',
@@ -447,8 +447,6 @@ class ImageRetrievalGUI:
         
     def update_stats(self):
         """Update system statistics"""
-        self.stats_text.delete('1.0', tk.END)
-        
         session_stats = self.system.get_session_stats()
         if session_stats:
             stats_text += f"Session Info:\n"
