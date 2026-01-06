@@ -169,12 +169,6 @@ self.rocchio = RocchioFeedback(alpha=1.0, beta=0.8, gamma=0.3)
 
 ## 🐛 Troubleshooting
 
-**Issue**: "No module named 'tensorflow'"
-
-```bash
-pip install tensorflow
-```
-
 **Issue**: Slow feature extraction
 
 - Reduce dataset size
