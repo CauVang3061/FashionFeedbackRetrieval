@@ -1,57 +1,45 @@
 """
 Main entry point for Fashion-MNIST Image Retrieval System
-Run this file to start the application
 """
 
 import sys
 import warnings
+import threading
+import tkinter as tk
+from retrieval import ImageRetrievalSystem
+from gui import ImageRetrievalGUI
+
 warnings.filterwarnings('ignore')
 
-# Check Python version
-if sys.version_info < (3, 7):
-    print("Error: Python 3.7 or higher is required")
-    sys.exit(1)
+def main():
+    print("Starting Fashion-MNIST Image Retrieval System...")
+    print("This may take a few minutes on first run (downloading & extracting features)\n")
+    
+    # Create system with smaller dataset for faster demo
+    system = ImageRetrievalSystem(dataset_limit=1000)
+    
+    # Initialize in separate thread to show progress
+    def init_system():
+        system.initialize()
+        print("\nSystem ready! Launching GUI...")
+        
+    init_thread = threading.Thread(target=init_system)
+    init_thread.start()
+    init_thread.join()  # Wait for initialization
+    
+    # Create GUI
+    root = tk.Tk()
+    app = ImageRetrievalGUI(root, system)
+    
+    print("Application launched successfully!")
+    print("\nHow to use:")
+    print("  1. Text Search: Enter keywords like 'dress', 'shoes', 'trouser'")
+    print("  2. Upload Image: Select any color/grayscale image (auto-resized)")
+    print("  3. Mark relevant (✓) / irrelevant (✗) images")
+    print("  4. Click 'Refine Search' to apply feedback")
+    
+    root.mainloop()
 
-# Check required packages
-required_packages = {
-    'numpy': 'numpy',
-    'PIL': 'Pillow',
-    'tensorflow': 'tensorflow',
-    'scipy': 'scipy'
-}
-
-missing_packages = []
-for module, package in required_packages.items():
-    try:
-        __import__(module)
-    except ImportError:
-        missing_packages.append(package)
-
-if missing_packages:
-    print("Error: Missing required packages. Please install them using:")
-    print(f"pip install {' '.join(missing_packages)}")
-    sys.exit(1)
-
-# Import GUI
-from gui import main
 
 if __name__ == "__main__":
-    print("=" * 70)
-    print("Fashion-MNIST Image Retrieval System with Relevance Feedback")
-    print("=" * 70)
-    print("\nFeatures:")
-    print("- Fashion-MNIST dataset (10 clothing categories)")
-    print("- CNN-based feature extraction (ResNet50)")
-    print("- Text and image-based queries")
-    print("- Rocchio relevance feedback algorithm")
-    print("- Interactive GUI with Tkinter")
-    print("\n" + "=" * 70 + "\n")
-    
-    try:
-        main()
-    except KeyboardInterrupt:
-        print("\nApplication terminated by user")
-    except Exception as e:
-        print(f"\nError: {str(e)}")
-        import traceback
-        traceback.print_exc()
+    main()

@@ -1,6 +1,5 @@
 """
-Dataset loader for Fashion-MNIST: 10 categories of clothing, 28x28 grayscale images.
-Handles downloading, loading, and preprocessing of Fashion-MNIST dataset
+Fashion-MNIST: 10 categories of clothing, 28x28 grayscale images.
 """
 
 import numpy as np
@@ -9,19 +8,17 @@ from PIL import Image
 import os
 
 class FashionMNISTDataset:
-    """Load and manage Fashion-MNIST dataset"""
-    
-    # Fashion-MNIST class labels
+
     CLASS_NAMES = [
         'T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
         'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot'
     ]
     
-    def __init__(self, subset_size=1000):
+    def __init__(self, subset_size):
         """
         Initialize dataset loader
         Args:
-            subset_size: Number of images to use from dataset (default: 1000)
+            subset_size: Number of images to use from dataset
         """
         self.subset_size = subset_size
         self.images = None

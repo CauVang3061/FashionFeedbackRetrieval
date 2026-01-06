@@ -7,16 +7,11 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 from PIL import Image, ImageTk
 import numpy as np
-from retrieval import ImageRetrievalSystem
 import threading
 
 class ImageRetrievalGUI:
-    """GUI for Fashion Image Retrieval System"""
-    
     def __init__(self, root, system):
         """
-        Initialize GUI
-        
         Args:
             root: Tkinter root window
             system: ImageRetrievalSystem instance
@@ -37,13 +32,11 @@ class ImageRetrievalGUI:
         self.create_widgets()
         
     def setup_window(self):
-        """Setup main window"""
         self.root.title("Fashion-MNIST Image Retrieval System")
         self.root.geometry("1200x800")
         self.root.configure(bg='#f0f0f0')
         
     def create_widgets(self):
-        """Create all GUI widgets"""
         # Title
         title_frame = tk.Frame(self.root, bg='#2c3e50', height=80)
         title_frame.pack(fill=tk.X)
@@ -72,7 +65,6 @@ class ImageRetrievalGUI:
         self.create_feedback_panel(main_container)
         
     def create_search_panel(self, parent):
-        """Create search control panel"""
         search_frame = tk.LabelFrame(
             parent, 
             text="Search Controls",
@@ -109,39 +101,25 @@ class ImageRetrievalGUI:
         # Separator
         ttk.Separator(search_frame, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=15)
         
-        # Random image search
-        tk.Label(
-            search_frame,
-            text="Random Image Query:",
-            font=('Arial', 10),
-            bg='white'
-        ).pack(anchor=tk.W, pady=(5, 2))
-        
-        tk.Button(
-            search_frame,
-            text="Search by Random Image",
-            command=self.search_by_random_image,
-            bg='#9b59b6',
-            fg='white',
-            font=('Arial', 10, 'bold'),
-            width=25,
-            cursor='hand2'
-        ).pack(pady=5)
-        
-        # Separator
-        ttk.Separator(search_frame, orient=tk.HORIZONTAL).pack(fill=tk.X, pady=15)
-        
         # Upload image
         tk.Label(
             search_frame,
-            text="Upload Image Query:",
+            text="Upload Your Image:",
             font=('Arial', 10),
             bg='white'
         ).pack(anchor=tk.W, pady=(5, 2))
         
+        tk.Label(
+            search_frame,
+            text="(Any size/color image)",
+            font=('Arial', 8),
+            fg='#7f8c8d',
+            bg='white'
+        ).pack(anchor=tk.W, pady=(0, 5))
+        
         tk.Button(
             search_frame,
-            text="Upload Image (28x28)",
+            text="Upload Image",
             command=self.upload_image,
             bg='#e74c3c',
             fg='white',
@@ -278,34 +256,28 @@ class ImageRetrievalGUI:
         
         threading.Thread(target=search_thread, daemon=True).start()
         
-    def search_by_random_image(self):
-        """Handle random image search"""
-        random_idx = np.random.randint(0, len(self.system.images))
-        
-        self.show_loading()
-        
-        def search_thread():
-            try:
-                indices, scores = self.system.search_by_image(random_idx, top_k=20)
-                self.root.after(0, lambda: self.display_results(indices, scores))
-            except Exception as e:
-                self.root.after(0, lambda: messagebox.showerror("Error", str(e)))
-        
-        threading.Thread(target=search_thread, daemon=True).start()
-        
     def upload_image(self):
-        """Handle image upload"""
+        """Handle image upload - accepts any size/color image"""
         filepath = filedialog.askopenfilename(
-            title="Select Image",
-            filetypes=[("Image files", "*.png *.jpg *.jpeg *.bmp")]
+            title="Select Image (any size/color)",
+            filetypes=[
+                ("Image files", "*.png *.jpg *.jpeg *.bmp *.gif *.tiff"),
+                ("All files", "*.*")
+            ]
         )
         
         if not filepath:
             return
         
         try:
-            # Load and preprocess image
-            img = Image.open(filepath).convert('L')  # Convert to grayscale
+            # Load image (can be color or grayscale, any size)
+            img = Image.open(filepath)
+            
+            # Convert to grayscale if needed (Fashion-MNIST is grayscale)
+            if img.mode != 'L':
+                img = img.convert('L')
+            
+            # Resize to 28x28 (Fashion-MNIST size)
             img = img.resize((28, 28), Image.LANCZOS)
             img_array = np.array(img)
             
@@ -321,7 +293,7 @@ class ImageRetrievalGUI:
             threading.Thread(target=search_thread, daemon=True).start()
             
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to load image: {str(e)}")
+            messagebox.showerror("Error", f"Failed to load image: {str(e)}\n\nPlease select a valid image file.")
     
     def show_loading(self):
         """Show loading message"""
@@ -339,7 +311,6 @@ class ImageRetrievalGUI:
         self.root.update()
         
     def display_results(self, indices, scores):
-        """Display search results"""
         # Clear previous results
         for widget in self.results_container.winfo_children():
             widget.destroy()
@@ -494,34 +465,3 @@ class ImageRetrievalGUI:
             stats_text += f"  Drift: {session_stats['query_drift']:.3f}\n"
         
         self.stats_text.insert('1.0', stats_text)
-
-
-def main():
-    """Main function to run GUI"""
-    print("Starting Fashion-MNIST Image Retrieval System...")
-    print("This may take a few minutes on first run (downloading & extracting features)\n")
-    
-    # Create system with smaller dataset for faster demo
-    system = ImageRetrievalSystem(dataset_size=500)
-    
-    # Initialize in separate thread to show progress
-    def init_system():
-        system.initialize()
-        print("\nSystem ready! Launching GUI...")
-        
-    init_thread = threading.Thread(target=init_system)
-    init_thread.start()
-    init_thread.join()  # Wait for initialization
-    
-    # Create GUI
-    root = tk.Tk()
-    app = ImageRetrievalGUI(root, system)
-    
-    print("GUI launched successfully!")
-    print("Try searching for: 'dress', 'shoes', 'shirt', etc.")
-    
-    root.mainloop()
-
-
-if __name__ == "__main__":
-    main()

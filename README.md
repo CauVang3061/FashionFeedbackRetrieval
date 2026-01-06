@@ -9,7 +9,7 @@ A complete image retrieval system built with Python, featuring CNN-based feature
 - **Multiple Query Types**:
   - Text-based search (e.g., "dress", "shoes")
   - Image-based search (from dataset)
-  - Upload custom images (28x28)
+  - Upload custom images (28x28 - grayscale, 28x28x3 - RGB)
 - **Relevance Feedback**: Rocchio algorithm for iterative search refinement
 - **Interactive GUI**: Built with Tkinter for easy interaction
 
@@ -19,13 +19,13 @@ A complete image retrieval system built with Python, featuring CNN-based feature
 fashion_retrieval/
 ├── dataset.py          # Fashion-MNIST dataset loader
 ├── features.py         # CNN feature extraction (ResNet50)
-├── similarity.py       # Similarity metrics (cosine, euclidean)
+├── similarity.py       # Cosine similarity metrics
 ├── feedback.py         # Rocchio relevance feedback algorithm
 ├── retrieval.py        # Main retrieval engine
-├── gui.py             # Tkinter GUI interface
-├── main.py            # Entry point
+├── gui.py              # Tkinter GUI interface
+├── main.py             # Entry point
 ├── requirements.txt    # Python dependencies
-└── README.md          # This file
+└── README.md
 ```
 
 ## 🚀 Installation
@@ -40,13 +40,6 @@ fashion_retrieval/
 ```bash
 pip install -r requirements.txt
 ```
-
-Required packages:
-
-- `numpy` - Numerical computations
-- `tensorflow` - Deep learning framework (for ResNet50)
-- `Pillow` - Image processing
-- `scipy` - Scientific computing
 
 ## 💻 Usage
 
@@ -128,7 +121,7 @@ Default popular parameters:
   - Bag
   - Ankle boot
 
-Default: System uses 500 images for faster demo (configurable)
+Default: System uses 1000 images for faster demo (configurable)
 
 ## 🎓 Academic Background
 
@@ -156,7 +149,7 @@ Key papers/concepts:
 Edit in `main.py`:
 
 ```python
-system = ImageRetrievalSystem(dataset_size=1000)  # Change to desired size
+system = ImageRetrievalSystem(dataset_limit=1000)  # Change to desired size
 ```
 
 ### Adjust Rocchio Parameters
@@ -165,14 +158,6 @@ Edit in `retrieval.py`:
 
 ```python
 self.rocchio = RocchioFeedback(alpha=1.0, beta=0.8, gamma=0.3)
-```
-
-### Use Different CNN Model
-
-Edit in `features.py`:
-
-```python
-extractor = FeatureExtractor(model_name='vgg16')  # Options: 'resnet50', 'vgg16'
 ```
 
 ## 📈 Performance
@@ -203,11 +188,3 @@ pip install tensorflow
 ## 📝 License
 
 This project is for educational purposes. Fashion-MNIST dataset is under MIT License.
-
-## 📧 Contact
-
-For questions or issues, please create an issue in the repository.
-
----
-
-**Happy Retrieving! 🔍✨**
