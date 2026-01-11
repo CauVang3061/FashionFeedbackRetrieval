@@ -1,15 +1,15 @@
-# Fashion-MNIST Image Retrieval System with Relevance Feedback
+# Fashion Image Retrieval System with Relevance Feedback
 
 A complete image retrieval system built with Python, featuring CNN-based feature extraction and Rocchio relevance feedback algorithm for iterative search refinement.
 
 ## 🎯 Features
 
-- **Fashion-MNIST Dataset**: 10 categories of fashion items (T-shirts, Trousers, Dresses, etc.)
+- **Fashion Product Images (FPI) Dataset**: 
 - **CNN Feature Extraction**: Pre-trained ResNet50 for deep feature extraction
 - **Multiple Query Types**:
   - Text-based search (e.g., "dress", "shoes")
   - Image-based search (from dataset)
-  - Upload custom images (28x28 - grayscale, 28x28x3 - RGB)
+  - Upload custom images ()
 - **Relevance Feedback**: Rocchio algorithm for iterative search refinement
 - **Interactive GUI**: Built with Tkinter for easy interaction
 
@@ -17,7 +17,7 @@ A complete image retrieval system built with Python, featuring CNN-based feature
 
 ```
 fashion_retrieval/
-├── dataset.py          # Fashion-MNIST dataset loader
+├── dataset.py          # FPI dataset loader
 ├── features.py         # CNN feature extraction (ResNet50)
 ├── similarity.py       # Cosine similarity metrics
 ├── feedback.py         # Rocchio relevance feedback algorithm
@@ -51,7 +51,7 @@ python main.py
 
 On first run, the system will:
 
-1. Download Fashion-MNIST dataset (~30MB)
+1. Download FPI dataset from PyTorch (~30MB)
 2. Load pre-trained ResNet50 model
 3. Extract features from all images (this may take 2-5 minutes)
 4. Cache features for future use
@@ -60,7 +60,7 @@ On first run, the system will:
 
 1. **Text Search**:
 
-   - Enter keywords like "dress", "shoes", "jacket"
+   - Enter keywords like 
    - Click "Search by Text"
 
 2. **Random Image Search**:
@@ -69,12 +69,12 @@ On first run, the system will:
 
 3. **Upload Image**:
 
-   - Click "Upload Image (28x28)" to search with your own 28x28 grayscale image
+   - Click "Upload Image" to search with your own image
 
 4. **Relevance Feedback**:
    - Mark relevant images with ✓ (green button)
    - Mark irrelevant images with ✗ (red button)
-   - Click "🔄 Refine Search" to apply feedback
+   - Click "OK" to apply feedback
    - System uses Rocchio algorithm to update query and re-rank results
 
 ## 🔬 Technical Details
@@ -114,20 +114,7 @@ Default popular parameters:
 
 ## 📊 Dataset Information
 
-**Fashion-MNIST**:
 
-- 70,000 grayscale images (28×28 pixels)
-- 10 categories:
-  - T-shirt/top
-  - Trouser
-  - Pullover
-  - Dress
-  - Coat
-  - Sandal
-  - Shirt
-  - Sneaker
-  - Bag
-  - Ankle boot
 
 Default: System uses 1000 images for faster demo (configurable)
 
