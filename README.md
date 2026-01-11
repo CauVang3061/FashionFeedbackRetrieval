@@ -16,7 +16,7 @@ A complete image retrieval system built with Python, featuring CNN-based feature
 ## 📁 Project Structure
 
 ```
-fashion_retrieval/
+FashionFeedbackRetrieval/
 ├── dataset.py          # Fashion Product Image dataset loader
 ├── features.py         # CNN feature extraction (ResNet50)
 ├── similarity.py       # Cosine similarity metrics
@@ -48,7 +48,7 @@ pip install -r requirements.txt
    
 2. Extract to project directory:
 ```
-   fashion_retrieval/
+   FashionFeedbackRetrieval/
    └── data/
        ├── images/          # Contains .jpg files
        └── styles.csv       # Metadata file
@@ -85,7 +85,7 @@ The web interface will open in your browser at `http://localhost:8501`
    - View top 20 similar results
 
 2. **Image Search**:
-   - Upload any image (color or grayscale, any size)
+   - Upload any image
    - System automatically resizes and processes it
    - Click "Search by Image"
 
@@ -143,8 +143,7 @@ Default popular parameters:
 - Multiple fashion categories:
   - Shirts, T-shirts, Casual Shoes, Watches
   - Jeans, Dresses, Heels, Handbags
-  - Jackets, Tops, Sandals, Flats
-  - And many more...
+  - Jackets, Tops, Sandals, Flats...
 - Each image has metadata: ID, gender, category, color, season, etc.
 
 **System Configuration:**
@@ -212,8 +211,7 @@ self.rocchio = RocchioFeedback(alpha=1.0, beta=0.8, gamma=0.3)
 
 ## 📝 License
 
-This project is for educational purposes. Fashion-MNIST dataset is under MIT License.
-**Dataset License:** Fashion Product Images dataset follows Kaggle's terms of use.
+This project is for educational purposes. Fashion Product Images dataset follows Kaggle's terms of use.
 
 ## 🙏 Acknowledgments
 
