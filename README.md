@@ -1,23 +1,23 @@
-# Fashion-MNIST Image Retrieval System with Relevance Feedback
+# Fashion Product Image (FPI) Retrieval System with Relevance Feedback
 
 A complete image retrieval system built with Python, featuring CNN-based feature extraction and Rocchio relevance feedback algorithm for iterative search refinement.
 
 ## 🎯 Features
 
-- **Fashion-MNIST Dataset**: 10 categories of fashion items (T-shirts, Trousers, Dresses, etc.)
+- **FPI Dataset**: Real-world fashion products from Kaggle with multiple categories (Shirts, Dresses, Shoes, Jeans, etc.)
 - **CNN Feature Extraction**: Pre-trained ResNet50 for deep feature extraction
 - **Multiple Query Types**:
   - Text-based search (e.g., "dress", "shoes")
   - Image-based search (from dataset)
   - Upload custom images (28x28 - grayscale, 28x28x3 - RGB)
 - **Relevance Feedback**: Rocchio algorithm for iterative search refinement
-- **Interactive GUI**: Built with Tkinter for easy interaction
+- **Interactive GUI**: Built with Streamlit for intuitive interaction
 
 ## 📁 Project Structure
 
 ```
 fashion_retrieval/
-├── dataset.py          # Fashion-MNIST dataset loader
+├── dataset.py          # Fashion Product Image dataset loader
 ├── features.py         # CNN feature extraction (ResNet50)
 ├── similarity.py       # Cosine similarity metrics
 ├── feedback.py         # Rocchio relevance feedback algorithm
@@ -41,54 +41,77 @@ fashion_retrieval/
 pip install -r requirements.txt
 ```
 
+### Dataset Setup
+
+1. Download **Fashion Product Images (Small)** dataset from Kaggle:
+   - Dataset: [Fashion Product Images (Small)](https://www.kaggle.com/datasets/paramaggarwal/fashion-product-images-small)
+   
+2. Extract to project directory:
+```
+   fashion_retrieval/
+   └── data/
+       ├── images/          # Contains .jpg files
+       └── styles.csv       # Metadata file
+```
+
 ## 💻 Usage
 
-### Run the Application
+### Step 1: Pre-process Dataset (Extract Features)
 
+Run this **once** to extract and cache features:
 ```bash
 python main.py
 ```
 
-On first run, the system will:
+This will:
+1. Load Fashion Product dataset (1000 images by default)
+2. Extract ResNet50 features for all images (~5-10 minutes)
+3. Cache features to `features_cache_1000.npy`
 
-1. Download Fashion-MNIST dataset (~30MB)
-2. Load pre-trained ResNet50 model
-3. Extract features from all images (this may take 2-5 minutes)
-4. Cache features for future use
+**Note:** You only need to run this once. Features are cached for future use.
 
-### Using the GUI
+### Step 2: Launch Web Interface
+```bash
+streamlit run gui.py
+```
+
+The web interface will open in your browser at `http://localhost:8501`
+
+### Using the Web Interface
 
 1. **Text Search**:
-
-   - Enter keywords like "dress", "shoes", "jacket"
+   - Enter product category in sidebar (e.g., "Shirts", "Shoes", "Dresses")
    - Click "Search by Text"
+   - View top 20 similar results
 
-2. **Random Image Search**:
+2. **Image Search**:
+   - Upload any image (color or grayscale, any size)
+   - System automatically resizes and processes it
+   - Click "Search by Image"
 
-   - Click "Search by Random Image" to query with a random image from dataset
-
-3. **Upload Image**:
-
-   - Click "Upload Image (28x28)" to search with your own 28x28 grayscale image
-
-4. **Relevance Feedback**:
-   - Mark relevant images with ✓ (green button)
-   - Mark irrelevant images with ✗ (red button)
-   - Click "🔄 Refine Search" to apply feedback
-   - System uses Rocchio algorithm to update query and re-rank results
+3. **Relevance Feedback**:
+   - Select feedback for each result using radio buttons:
+     - **None**: No feedback
+     - **Relevant ✓**: Mark as relevant
+     - **Irrelevant ✗**: Mark as irrelevant
+   - Click **"🔄 Refine Results"** to apply Rocchio feedback
+   - System re-ranks results based on your selections
+   - Repeat process iteratively for better results
 
 ## 🔬 Technical Details
 
 ### Feature Extraction
 
 - Uses pre-trained ResNet50 (ImageNet weights)
-- Extracts 2048-dimensional feature vectors
+- Extracts **2048-dimensional** feature vectors
+- Images resized to 224×224 for ResNet50 input
 - L2 normalization applied to all features
 
 ### Similarity Metric
 
-- Cosine similarity (dot product of normalized vectors)
-- Higher scores indicate greater similarity
+- **Cosine similarity** (dot product of normalized vectors)
+- Range: [-1, 1], higher scores = more similar
+- Optimal for L2-normalized deep learning features
 
 ### Rocchio Algorithm
 
@@ -114,22 +137,20 @@ Default popular parameters:
 
 ## 📊 Dataset Information
 
-**Fashion-MNIST**:
+**Fashion Product Images (Small)**:
+- Source: Kaggle dataset
+- ~44,000+ product images (RGB, various sizes)
+- Multiple fashion categories:
+  - Shirts, T-shirts, Casual Shoes, Watches
+  - Jeans, Dresses, Heels, Handbags
+  - Jackets, Tops, Sandals, Flats
+  - And many more...
+- Each image has metadata: ID, gender, category, color, season, etc.
 
-- 70,000 grayscale images (28×28 pixels)
-- 10 categories:
-  - T-shirt/top
-  - Trouser
-  - Pullover
-  - Dress
-  - Coat
-  - Sandal
-  - Shirt
-  - Sneaker
-  - Bag
-  - Ankle boot
-
-Default: System uses 1000 images for faster demo (configurable)
+**System Configuration:**
+- Default: 1000 images for faster processing
+- Configurable via `dataset_limit` parameter
+- Features cached for instant subsequent loads
 
 ## 🎓 Academic Background
 
@@ -170,23 +191,32 @@ self.rocchio = RocchioFeedback(alpha=1.0, beta=0.8, gamma=0.3)
 
 ## 📈 Performance
 
-- Feature extraction: ~2-5 minutes for 500 images (first run only)
-- Search query: <1 second
-- Relevance feedback: <1 second
-- Memory usage: ~1-2 GB (depends on dataset size)
+- **Feature extraction**: ~5-10 minutes for 1000 color images (first run only)
+- **Search query**: <1 second
+- **Relevance feedback**: <1 second
+- **Memory usage**: ~1-3 GB (depends on dataset size)
+- **Feature cache**: ~8MB per 1000 images (2048-dim features)
 
 ## 🐛 Troubleshooting
 
+**Issue**: "FileNotFoundError: styles.csv not found"
+- **Solution**: Download dataset from Kaggle and extract to `data/` folder
+
+**Issue**: "No valid images found!"
+- **Solution**: Check that `data/images/` contains .jpg files
+
 **Issue**: Slow feature extraction
-
-- Reduce dataset size
-- Or install GPU version: `pip install tensorflow-gpu` (requires CUDA)
-
-**Issue**: GUI not displaying
-
-- Ensure Tkinter is installed (usually comes with Python)
-- On Linux: `sudo apt-get install python3-tk`
+- **Solution 1**: Reduce dataset size in `main.py`
+- **Solution 2**: Install GPU version: `pip install tensorflow-gpu` (requires CUDA)
+- **Solution 3**: Increase `batch_size` (requires more RAM)
 
 ## 📝 License
 
 This project is for educational purposes. Fashion-MNIST dataset is under MIT License.
+**Dataset License:** Fashion Product Images dataset follows Kaggle's terms of use.
+
+## 🙏 Acknowledgments
+
+- **Dataset**: Fashion Product Images (Small) from Kaggle
+- **Model**: ResNet50 pre-trained on ImageNet
+- **Framework**: TensorFlow/Keras, Streamlit

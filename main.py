@@ -1,40 +1,37 @@
 """
-Main entry point for Fashion-MNIST Image Retrieval System
+Main Pre-processing Script for Fashion Image Retrieval
+Run this first to extract features for the entire dataset.
 """
 
-import sys
 import warnings
-import threading
-import tkinter as tk
 from retrieval import ImageRetrievalSystem
-from gui import ImageRetrievalGUI
 
 warnings.filterwarnings('ignore')
 
 def main():
-    print("Starting Fashion-MNIST Image Retrieval System...")
-    print("This may take a few minutes on first run (downloading & extracting features)\n")
+    print("=" * 60)
+    print("FASHION PRODUCT IMAGES - PRE-PROCESSING")
+    print("=" * 60)
     
-    # Create system with smaller dataset for faster demo
-    system = ImageRetrievalSystem(dataset_limit=1000)
+    # IMPORTANT: This value must match the dataset_limit in gui.py
+    # If you change this, also update gui.py line 12
+    dataset_size = 1000
     
-    # Initialize in separate thread to show progress
-    def init_system():
-        system.initialize()
-        print("\nSystem ready! Launching GUI...")
-        
-    init_thread = threading.Thread(target=init_system)
-    init_thread.start()
-    init_thread.join()  # Wait for initialization
+    system = ImageRetrievalSystem(dataset_limit=dataset_size)
     
-    # Create GUI
-    root = tk.Tk()
-    app = ImageRetrievalGUI(root, system)
+    print(f"\n[*] Initializing and extracting features for {dataset_size} images...")
     
-    print("Application launched successfully!")
+    system.initialize(force_recompute=True)
     
-    root.mainloop()
-
+    print("\n" + "=" * 60)
+    print("✅ SUCCESS!")
+    print(f"📁 Features cached at: {system.feature_cache_path}")
+    print(f"📊 Dataset size: {len(system.image_ids)} images")
+    print(f"📐 Feature dimension: {system.features.shape[1]}")
+    print(f"🏷️  Unique categories: {len(system.dataset.get_unique_labels())}")
+    print("\n🚀 Run the GUI:")
+    print("    streamlit run gui.py")
+    print("=" * 60)
 
 if __name__ == "__main__":
     main()
