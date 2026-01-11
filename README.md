@@ -9,7 +9,7 @@ A complete image retrieval system built with Python, featuring CNN-based feature
 - **Multiple Query Types**:
   - Text-based search (e.g., "dress", "shoes")
   - Image-based search (from dataset)
-  - Upload custom images (28x28 - grayscale, 28x28x3 - RGB)
+  - Upload custom images ()
 - **Relevance Feedback**: Rocchio algorithm for iterative search refinement
 - **Interactive GUI**: Built with Streamlit for intuitive interaction
 
