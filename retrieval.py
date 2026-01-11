@@ -64,14 +64,15 @@ class ImageRetrievalSystem:
             print(f"Warning: No matching classes found for '{text_query}'")
             query_features = np.mean(self.features, axis=0)
         else:
-            relevant_mask = np.isin(self.labels, relevant_classes)
+            labels_lower = np.array([str(l).lower() for l in self.labels])
+            relevant_mask = np.isin(labels_lower, relevant_classes)
             relevant_indices = np.where(relevant_mask)[0]
             
             if len(relevant_indices) == 0:
-                return [], []
-            
-            relevant_features = self.features[relevant_indices]
-            query_features = np.mean(relevant_features, axis=0)
+                query_features = np.mean(self.features, axis=0)
+            else:
+                relevant_features = self.features[relevant_indices]
+                query_features = np.mean(relevant_features, axis=0)
         
         query_features = query_features / (np.linalg.norm(query_features) + 1e-10)
         self.current_query_vector = query_features

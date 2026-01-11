@@ -9,7 +9,7 @@ st.set_page_config(page_title="Fashion Image Retrieval with Relevant Feedback", 
 
 @st.cache_resource
 def get_retrieval_system():
-    system = ImageRetrievalSystem()
+    system = ImageRetrievalSystem(dataset_limit=1000, batch_size=32)
     system.initialize()
     return system
 
@@ -24,9 +24,11 @@ if 'feedback_irr' not in st.session_state:
     st.session_state.feedback_irr = set()
 if 'search_id' not in st.session_state:
     st.session_state.search_id = 0
+if 'feedback_state' not in st.session_state:
+    st.session_state.feedback_state = {}
 
 with st.sidebar:
-    st.title("Settings & Controls")
+    st.title("Search Options")
     
     # 1. Text query
     st.subheader("Text Search")
@@ -36,6 +38,7 @@ with st.sidebar:
         st.session_state.results = (indices, scores)
         st.session_state.feedback_rel.clear()
         st.session_state.feedback_irr.clear()
+        st.session_state.feedback_state = {}
         st.session_state.search_id += 1
         st.rerun()
 
@@ -52,6 +55,7 @@ with st.sidebar:
             st.session_state.results = (indices, scores)
             st.session_state.feedback_rel.clear()
             st.session_state.feedback_irr.clear()
+            st.session_state.feedback_state = {}
             st.session_state.search_id += 1
             st.rerun()
 
@@ -74,8 +78,8 @@ if st.session_state.results:
     
     # Feedback controls
     col_fb1, col_fb2 = st.columns([4, 1])
-    with col_fb1:
-        st.info(f"Selected: {len(st.session_state.feedback_rel)} Relevant (✓), {len(st.session_state.feedback_irr)} Irrelevant (✗)")
+    # with col_fb1:
+    #     st.info(f"Selected: {len(st.session_state.feedback_rel)} Relevant (✓), {len(st.session_state.feedback_irr)} Irrelevant (✗)")
     with col_fb2:
         if st.button("🔄 Refine Results", type="primary", use_container_width=True):
             if not st.session_state.feedback_rel and not st.session_state.feedback_irr:
@@ -89,9 +93,23 @@ if st.session_state.results:
                 st.session_state.results = (new_indices, new_scores)
                 st.session_state.feedback_rel.clear()
                 st.session_state.feedback_irr.clear()
+                st.session_state.feedback_state = {}
                 st.session_state.search_id += 1
                 st.rerun()
     
+    def update_feedback(idx, choice):
+        """Callback to update feedback state"""
+        if choice == "Relevant ✓":
+            st.session_state.feedback_rel.add(idx)
+            st.session_state.feedback_irr.discard(idx)
+        elif choice == "Irrelevant ✗":
+            st.session_state.feedback_irr.add(idx)
+            st.session_state.feedback_rel.discard(idx)
+        else:  # "None"
+            st.session_state.feedback_rel.discard(idx)
+            st.session_state.feedback_irr.discard(idx)
+        st.session_state.feedback_state[idx] = choice
+
     # Display results
     cols = st.columns(4)
     for i, (idx, score) in enumerate(zip(indices, scores)):
@@ -102,13 +120,25 @@ if st.session_state.results:
                 
                 st.image(img, use_container_width=True)
                 st.caption(f"**{label}** | Score: {score:.3f}")
+
+                default_idx = 0
+                if idx in st.session_state.feedback_state:
+                    choice = st.session_state.feedback_state[idx]
+                    if choice == "Relevant ✓":
+                        default_idx = 1
+                    elif choice == "Irrelevant ✗":
+                        default_idx = 2
                 
                 feedback_choice = st.radio(
                     "Feedback:",
                     options=["None", "Relevant ✓", "Irrelevant ✗"],
                     key=f"fb_{st.session_state.search_id}_{idx}_{i}",
+                    index=default_idx,
                     horizontal=True,
-                    label_visibility="collapsed"
+                    label_visibility="collapsed",
+                    on_change=update_feedback,
+                    args=(idx, ),
+                    kwargs={'choice': None}
                 )
                 
                 if feedback_choice == "Relevant ✓":

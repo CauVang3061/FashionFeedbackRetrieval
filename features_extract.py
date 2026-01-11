@@ -44,7 +44,7 @@ class FeatureExtractor:
         
         return preprocess_input(img_array.astype('float32'))
     
-    def extract_features(self, dataset_obj):
+    def extract_features(self, dataset_obj, batch_size=None):
         if self.model is None:
             self.build_model()
             
