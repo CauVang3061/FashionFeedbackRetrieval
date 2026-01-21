@@ -1,3 +1,7 @@
 .env
 __pycache__/
 features_cache_*.npy
+*.txt
+*.jpeg
+*.png
+*.jpg
